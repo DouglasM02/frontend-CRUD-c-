@@ -1,0 +1,48 @@
+<div class="container">
+  <a [routerLink]="['criar']" class="btn btn-primary mb-3 mt-3"
+    >Cadastrar funcionário no departamento</a
+  >
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="filtro">Filtro</span>
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Filtre pelo nome"
+      aria-label="Filtro"
+      aria-describedby="filtro"
+      [(ngModel)]="filter"
+    />
+  </div>
+  <table class="table table-dark table-striped table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Foto</th>
+        <th scope="col">Nome</th>
+        <th scope="col">Rg</th>
+        <th scope="col" colspan="2">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let funcionario of filteredFuncionarios">
+        <th scope="row">{{ funcionario.id }}</th>
+        <td>{{ funcionario.foto }}</td>
+        <td>{{ funcionario.nome }}</td>
+        <td>{{ funcionario.rg }}</td>
+        <td>
+          <a
+            [routerLink]="['atualiza/', funcionario.id]"
+            class="btn btn-primary mr-3"
+            >Atualizar</a
+          >
+          <button (click)="delete(funcionario.id)" class="btn btn-danger ml-3">
+            Deletar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a [routerLink]="['/departamentos']" class="btn btn-secondary mt-3"
+    >Voltar para a página de departamentos</a
+  >
+</div>

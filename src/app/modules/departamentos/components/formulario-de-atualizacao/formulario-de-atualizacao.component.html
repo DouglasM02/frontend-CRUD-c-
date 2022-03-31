@@ -1,0 +1,41 @@
+<div class="container">
+  <h2>Formulário de Atualização de departamento</h2>
+  <form #atualizarForm="ngForm" *ngIf="departamento$">
+    <div class="mb-3">
+      <label for="nome" class="form-label">Nome do Departamento</label>
+      <input
+        type="text"
+        class="form-control"
+        id="nome"
+        aria-describedby="nome"
+        [(ngModel)]="departamento$.nome"
+        #departamentoNome="ngModel"
+        name="nome"
+      />
+      <div id="nome" class="form-text">
+        Coloque aqui o nome do departamento desejado
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="sigla" class="form-label">Sigla do Departamento</label>
+      <input
+        type="text"
+        class="form-control"
+        id="sigla"
+        aria-describedby="sigla"
+        maxlength="3"
+        [(ngModel)]="departamento$.sigla"
+        #departamentoSigla="ngModel"
+        name="sigla"
+      />
+      <div id="sigla" class="form-text">Digite a Sigla do departamento</div>
+    </div>
+    <button type="submit" (click)="save()" class="btn btn-primary">
+      Enviar
+    </button>
+  </form>
+  <a [routerLink]="['/departamentos']" class="btn btn-secondary mt-3"
+    >Voltar para a página de departamentos</a
+  >
+</div>
