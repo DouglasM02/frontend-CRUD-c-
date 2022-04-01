@@ -13,6 +13,8 @@ export class FormularioDeCadastroDeFuncionarioComponent implements OnInit {
   departamentoId: number = 0;
   funcionario: Funcionarios;
   formCadastroFunc: FormGroup;
+  imagemSelecionada: any = null;
+
 
   constructor(private activatedRoute: ActivatedRoute, private funcionarioService: FuncionariosService, private formBuilder: FormBuilder) {
 
@@ -39,8 +41,19 @@ export class FormularioDeCadastroDeFuncionarioComponent implements OnInit {
   }
 
   onChange(event: any) {
-    console.log(event)
+    this.imagemSelecionada = <File>event.target.files[0];
 
+  }
+
+  imageInsert(file: FormData) {
+    this.funcionarioService.uploadImage(file).subscribe({
+      next: data => console.log(data),
+      error: err =>  {
+        this.funcionario.foto = err.error.text
+        this.post(this.funcionario)
+      }
+
+    })
   }
 
   validacao() {
@@ -49,25 +62,19 @@ export class FormularioDeCadastroDeFuncionarioComponent implements OnInit {
     let statusRg = false;
 
     if(this.formCadastroFunc.controls['nome'].value.match("[a-zA-Z]+") ) {
-      //console.log("Nome ok")
       statusNome = true
     }
 
     if(this.formCadastroFunc.controls['rg'].value.length  == 9 && this.formCadastroFunc.controls['rg'].value.match("[0-9]+")) {
-      //console.log("rg ok")
       statusRg = true
     }
 
     if(statusNome && statusRg){
-      //console.log("tudo ok")
       this.funcionario = this.formCadastroFunc.value
-      this.post(this.funcionario)
+      const fd = new FormData()
+      fd.append("files", this.imagemSelecionada, this.imagemSelecionada.name)
+      this.imageInsert(fd);
     }
-
-
-    //if(this.funcionario.nome.match("[a-zA-Z]+") && this.funcionario.rg)
-
-    //console.log(this.funcionario)
   }
 
 }

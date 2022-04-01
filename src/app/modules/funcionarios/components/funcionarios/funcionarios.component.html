@@ -26,7 +26,9 @@
     <tbody>
       <tr *ngFor="let funcionario of filteredFuncionarios">
         <th scope="row">{{ funcionario.id }}</th>
-        <td>{{ funcionario.foto }}</td>
+        <td>
+          <img [src]="getImage(funcionario.id)" width="50px" height="50px" />
+        </td>
         <td>{{ funcionario.nome }}</td>
         <td>{{ funcionario.rg }}</td>
         <td>

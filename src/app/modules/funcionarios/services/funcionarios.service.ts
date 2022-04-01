@@ -1,7 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http'
-import {Funcionarios} from '../model/funcionarios'
 import { Observable, of } from 'rxjs';
+import { Funcionarios } from '../model/funcionarios';
 
 @Injectable({
   providedIn: 'root'
@@ -36,5 +36,14 @@ export class FuncionariosService {
   public deleteFuncionario(departamentId: number, id:number): Observable<any> {
     return this.httpClient.delete<any>(`${this.baseURL}/${departamentId}/funcionario/${id}`);
   }
+
+  public uploadImage(imgUrl: FormData) {
+    return this.httpClient.post<FormData>(`${this.baseURL}/upload`,imgUrl)
+  }
+
+  public getImage(id: number) {
+    return `${this.baseURL}/upload/${id}`
+  }
+
 
 }

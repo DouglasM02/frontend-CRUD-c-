@@ -18,6 +18,7 @@ export class FormularioDeAtualizacaoDeFuncionarioComponent implements OnInit {
   funcionario: Funcionarios;
   departamentos: Departamentos[] = [];
   formAttFunc: FormGroup;
+  imagemSelecionada: any = "";
   //formGetDepartamentos: FormGroup;
 
   constructor(private activatedRoute: ActivatedRoute, private funcionarioService: FuncionariosService, private departamentServices: DepartamentosService, private formBuilder:FormBuilder) {
@@ -27,6 +28,7 @@ export class FormularioDeAtualizacaoDeFuncionarioComponent implements OnInit {
     this.funcionarioId = (Number(this.activatedRoute.snapshot.paramMap.get("id")));
 
     this.funcionario = {id:0,nome:"",foto:"",rg:0, departamentoId:this.departamentoId}
+
 
     this.formAttFunc = this.formBuilder.group({
       nome:[''],
@@ -89,12 +91,30 @@ export class FormularioDeAtualizacaoDeFuncionarioComponent implements OnInit {
     if(statusNome && statusRg) {
       this.funcionario.nome = this.formAttFunc.controls['nome'].value
       this.funcionario.rg = this.formAttFunc.controls['rg'].value
-      console.log("tudo Ok")
-      //this.funcionario.departamentoId = this.formGetDepartamentos.value
-      this.save()
+      const fd = new FormData()
+      fd.append("files", this.imagemSelecionada, this.imagemSelecionada.name)
+      this.imageInsert(fd);
+      //console.log("tudo Ok")
+      //this.save()
     }
 
 
+  }
+
+  onChange(event: any) {
+    this.imagemSelecionada = <File>event.target.files[0];
+
+  }
+
+  imageInsert(file: FormData) {
+    this.funcionarioService.uploadImage(file).subscribe({
+      next: data => console.log(data),
+      error: err =>  {
+        this.funcionario.foto = err.error.text
+        this.save()
+      }
+
+    })
   }
   save() {
     this.funcionarioService.saveFuncionarioAtt(this.departamentoId, this.funcionario).subscribe({

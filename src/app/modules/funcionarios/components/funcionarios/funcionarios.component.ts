@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from '@angular/router'
+import { ActivatedRoute } from '@angular/router';
 import { Funcionarios } from '../../model/funcionarios';
 import { FuncionariosService } from '../../services/funcionarios.service';
 
@@ -9,13 +9,15 @@ import { FuncionariosService } from '../../services/funcionarios.service';
   styleUrls: ['./funcionarios.component.css']
 })
 export class FuncionariosComponent implements OnInit {
+
   funcionarios: Funcionarios[] = [];
   filteredFuncionarios: Funcionarios[] = [];
   departamentoId: number = 0;
   _filterBy: string = "";
+
   constructor(private activatedRoute: ActivatedRoute, private funcionarioService: FuncionariosService) {
+
     this.departamentoId = (Number(this.activatedRoute.snapshot.paramMap.get("departamentoId")))
-    console.log(this.departamentoId)
 
     this.getAll();
   }
@@ -42,6 +44,10 @@ export class FuncionariosComponent implements OnInit {
     })
   }
 
+  getImage(id:number) {
+    return this.funcionarioService.getImage(id)
+  }
+
   set filter(value: string) {
     this._filterBy = value;
     this.filteredFuncionarios = this.funcionarios.filter(funcionario=> funcionario.nome.toLowerCase().indexOf(this._filterBy.toLowerCase())> -1);
@@ -50,5 +56,7 @@ export class FuncionariosComponent implements OnInit {
   get filter() {
     return this._filterBy
   }
+
+
 
 }
