@@ -1,33 +1,26 @@
 <div class="container">
   <h2>Formulário de Atualização de funcionário</h2>
-  <form #atualizarForm="ngForm" *ngIf="funcionario">
+
+  <form #atualizarForm="ngForm" *ngIf="funcionario" [formGroup]="formAttFunc">
     <div class="mb-3">
       <label for="nome" class="form-label">Nome do Funcioanrio</label>
       <input
         type="text"
         class="form-control"
         id="nome"
-        aria-describedby="nome"
-        [(ngModel)]="funcionario.nome"
-        #funcionarioNome="ngModel"
-        name="nome"
+        formControlName="nome"
       />
-      <div id="nome" class="form-text">Coloque aqui o nome do funcionário</div>
     </div>
 
     <div class="mb-3">
       <label for="foto" class="form-label">Foto do Funcionário</label>
       <input
         type="file"
+        accept=".png, .jpg, .jpeg"
         class="form-control"
         id="foto"
-        aria-describedby="foto"
-        maxlength="3"
-        [(ngModel)]="funcionario.foto"
-        #funcionarioFoto="ngModel"
-        name="foto"
+        formControlName="foto"
       />
-      <div id="foto" class="form-text">Carregue uma foto do funcionário</div>
     </div>
 
     <div class="mb-3">
@@ -36,20 +29,17 @@
         type="text"
         class="form-control"
         id="rg"
-        aria-describedby="rg"
-        [(ngModel)]="funcionario.rg"
-        #funcionarioRg="ngModel"
-        name="rg"
+        formControlName="rg"
         maxlength="9"
       />
       <div id="nome" class="form-text">Coloque aqui o nome do funcionário</div>
     </div>
 
-    <div [formGroup]="departaments">
+    <!-- <div [formGroup]="formGetDepartamentos">
       <select
         class="form-select"
         id="departamentos"
-        [formControlName]="funcionario.departamentoId"
+        formControlName="getDepartamentos"
       >
         <option
           [value]="departamento.id"
@@ -58,9 +48,9 @@
           {{ departamento.nome }}
         </option>
       </select>
-    </div>
+    </div> -->
 
-    <button type="submit" (click)="save()" class="btn btn-primary">
+    <button type="submit" (click)="validacao()" class="btn btn-primary mt-3">
       Enviar
     </button>
   </form>

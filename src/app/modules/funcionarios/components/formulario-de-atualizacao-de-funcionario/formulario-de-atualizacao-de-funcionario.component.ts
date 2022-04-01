@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Departamentos } from 'src/app/modules/departamentos/models/departamentos';
 import { DepartamentosService } from 'src/app/modules/departamentos/services/departamentos.service';
@@ -17,9 +17,10 @@ export class FormularioDeAtualizacaoDeFuncionarioComponent implements OnInit {
   funcionarioId: number = 0;
   funcionario: Funcionarios;
   departamentos: Departamentos[] = [];
-  departaments: any
+  formAttFunc: FormGroup;
+  //formGetDepartamentos: FormGroup;
 
-  constructor(private activatedRoute: ActivatedRoute, private funcionarioService: FuncionariosService, private departamentServices: DepartamentosService) {
+  constructor(private activatedRoute: ActivatedRoute, private funcionarioService: FuncionariosService, private departamentServices: DepartamentosService, private formBuilder:FormBuilder) {
     this.departamentoId = (Number(this.activatedRoute.snapshot.paramMap.get("departamentoId")))
     console.log(this.departamentoId)
 
@@ -27,13 +28,19 @@ export class FormularioDeAtualizacaoDeFuncionarioComponent implements OnInit {
 
     this.funcionario = {id:0,nome:"",foto:"",rg:0, departamentoId:this.departamentoId}
 
-    this.departaments = new FormGroup({
-      depart: new FormControl()
+    this.formAttFunc = this.formBuilder.group({
+      nome:[''],
+      foto:[''],
+      rg:['']
     })
+
+    // this.formGetDepartamentos = this.formBuilder.group({
+    //   getDepartamentos:[this.funcionarioId]
+    // })
 
     this.getById();
 
-    this.getDepartaments()
+    //this.getDepartaments()
 
 
    }
@@ -43,24 +50,60 @@ export class FormularioDeAtualizacaoDeFuncionarioComponent implements OnInit {
 
   getById() {
     return this.funcionarioService.getFuncionarioById(this.departamentoId,this.funcionarioId).subscribe({
-      next: data => this.funcionario = data,
+      next: data => {
+
+        this.funcionario = data
+
+        this.formAttFunc.controls['nome'].setValue(this.funcionario.nome)
+        //this.formAttFunc.controls['foto'].setValue(this.funcionario.foto)
+        this.formAttFunc.controls['rg'].setValue(this.funcionario.rg)
+      },
       error: err => console.log(err)
     })
   }
 
-  getDepartaments() {
-    this.departamentServices.getDepartaments().subscribe({
-      next: datas => this.departamentos = datas,
-      error: err => console.log(err)
-    })
-  }
+  // getDepartaments() {
+  //   this.departamentServices.getDepartaments().subscribe({
+  //     next: datas => this.departamentos = datas,
+  //     error: err => console.log(err)
+  //   })
+  // }
 
-  save(): void {
-    this.funcionarioService.saveFuncionarioAtt(this.departamentoId,this.funcionario).subscribe({
+  validacao() {
+    let statusNome = false;
+    let statusRg = false;
+
+    //console.log(this.formAttFunc.value)
+
+    if(this.formAttFunc.controls['nome'].value.match("[a-zA-Z]+")) {
+      console.log("Nome ok");
+      statusNome = true;
+      //console.log(this.formGetDepartamentos.controls['getDepartamentos'].value)
+    }
+
+    if(this.formAttFunc.controls['rg'].value.length == 9 && this.formAttFunc.controls['rg'].value.match("[0-9]+")){
+      console.log("Rg ok")
+      statusRg = true;
+    }
+
+    if(statusNome && statusRg) {
+      this.funcionario.nome = this.formAttFunc.controls['nome'].value
+      this.funcionario.rg = this.formAttFunc.controls['rg'].value
+      console.log("tudo Ok")
+      //this.funcionario.departamentoId = this.formGetDepartamentos.value
+      this.save()
+    }
+
+
+  }
+  save() {
+    this.funcionarioService.saveFuncionarioAtt(this.departamentoId, this.funcionario).subscribe({
       next: funcionario => console.log(funcionario),
       error: err => console.log(err)
     })
 
   }
+
+
 
 }

@@ -1,54 +1,34 @@
 <div class="container">
   <h2>Formulário de Cadastro de funcionário</h2>
-  <form #atualizarForm="ngForm" *ngIf="funcionario">
-    <div class="mb-3">
-      <label for="nome" class="form-label">Nome do Funcioanrio</label>
-      <input
-        type="text"
-        class="form-control"
-        id="nome"
-        aria-describedby="nome"
-        [(ngModel)]="funcionario.nome"
-        #funcionarioNome="ngModel"
-        name="nome"
-      />
-      <div id="nome" class="form-text">Coloque aqui o nome do funcionário</div>
-    </div>
 
-    <div class="mb-3">
-      <label for="foto" class="form-label">Foto do Funcionário</label>
-      <input
-        type="file"
-        class="form-control"
-        id="foto"
-        aria-describedby="foto"
-        maxlength="3"
-        [(ngModel)]="funcionario.foto"
-        #funcionarioFoto="ngModel"
-        name="foto"
-      />
-      <div id="foto" class="form-text">Carregue uma foto do funcionário</div>
-    </div>
+  <form [formGroup]="formCadastroFunc">
+    <label for="nome" class="form-label mt-3">Nome</label>
+    <input type="text" class="form-control" id="nome" formControlName="nome" />
 
-    <div class="mb-3">
-      <label for="rg" class="form-label">Rg do Funcioanrio</label>
-      <input
-        type="text"
-        class="form-control"
-        id="rg"
-        aria-describedby="rg"
-        [(ngModel)]="funcionario.rg"
-        #funcionarioRg="ngModel"
-        name="rg"
-        maxlength="9"
-      />
-      <div id="rg" class="form-text">Coloque aqui o Rg do funcionário</div>
-    </div>
+    <label for="foto" class="form-label mt-3">Foto</label>
+    <input
+      type="file"
+      class="form-control"
+      id="foto"
+      formControlName="foto"
+      accept=".png, .jpg, .jpeg"
+      (change)="onChange($event)"
+    />
 
-    <button type="submit" (click)="post(funcionario)" class="btn btn-primary">
+    <label for="rg" class="form-label mt-3">Rg</label>
+    <input
+      type="text"
+      class="form-control"
+      id="rg"
+      formControlName="rg"
+      maxlength="9"
+    />
+
+    <button type="submit" (click)="validacao()" class="btn btn-primary mt-3">
       Enviar
     </button>
   </form>
+
   <a [routerLink]="['/departamentos']" class="btn btn-secondary mt-3"
     >Voltar para a página de departamentos</a
   >

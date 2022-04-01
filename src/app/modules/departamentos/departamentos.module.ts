@@ -1,11 +1,11 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {FormsModule} from '@angular/forms'
-
-import { DepartamentosRoutingModule } from './departamentos-routing.module';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DepartamentosComponent } from './components/departamentos/departamentos.component';
 import { FormularioDeAtualizacaoComponent } from './components/formulario-de-atualizacao/formulario-de-atualizacao.component';
 import { FormularioDeCriacaoComponent } from './components/formulario-de-criacao/formulario-de-criacao.component';
+import { DepartamentosRoutingModule } from './departamentos-routing.module';
+
 
 
 @NgModule({
@@ -17,7 +17,8 @@ import { FormularioDeCriacaoComponent } from './components/formulario-de-criacao
   imports: [
     CommonModule,
     DepartamentosRoutingModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class DepartamentosModule { }

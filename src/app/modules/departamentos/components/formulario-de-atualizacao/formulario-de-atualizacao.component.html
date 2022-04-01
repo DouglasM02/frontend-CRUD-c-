@@ -1,6 +1,6 @@
 <div class="container">
   <h2>Formulário de Atualização de departamento</h2>
-  <form #atualizarForm="ngForm" *ngIf="departamento$">
+  <form #atualizarForm="ngForm" *ngIf="departamento" [formGroup]="formAtt">
     <div class="mb-3">
       <label for="nome" class="form-label">Nome do Departamento</label>
       <input
@@ -8,14 +8,21 @@
         class="form-control"
         id="nome"
         aria-describedby="nome"
-        [(ngModel)]="departamento$.nome"
-        #departamentoNome="ngModel"
+        formControlName="nomeDepartamento"
         name="nome"
       />
       <div id="nome" class="form-text">
         Coloque aqui o nome do departamento desejado
       </div>
     </div>
+
+    <span *ngIf="formAtt.controls['nomeDepartamento'].touched">
+      <span
+        class="alert-danger p-1"
+        *ngIf="formAtt.controls['nomeDepartamento'].errors"
+        >Campo obrigatório</span
+      >
+    </span>
 
     <div class="mb-3">
       <label for="sigla" class="form-label">Sigla do Departamento</label>
@@ -25,16 +32,29 @@
         id="sigla"
         aria-describedby="sigla"
         maxlength="3"
-        [(ngModel)]="departamento$.sigla"
-        #departamentoSigla="ngModel"
+        formControlName="siglaDepartamento"
         name="sigla"
       />
       <div id="sigla" class="form-text">Digite a Sigla do departamento</div>
     </div>
-    <button type="submit" (click)="save()" class="btn btn-primary">
+
+    <span *ngIf="formAtt.controls['nomeDepartamento'].touched">
+      <span
+        class="alert-danger p-1"
+        *ngIf="formAtt.controls['nomeDepartamento'].errors"
+        >Campo obrigatório</span
+      >
+    </span>
+
+    <span class="my-3 alert alert-danger" *ngIf="hasError == 'sigla'">
+      {{ error }}
+    </span>
+
+    <button type="submit" (click)="validacoes()" class="btn btn-primary">
       Enviar
     </button>
   </form>
+
   <a [routerLink]="['/departamentos']" class="btn btn-secondary mt-3"
     >Voltar para a página de departamentos</a
   >
