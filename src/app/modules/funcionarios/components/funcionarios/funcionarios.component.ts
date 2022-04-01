@@ -19,10 +19,10 @@ export class FuncionariosComponent implements OnInit {
 
     this.departamentoId = (Number(this.activatedRoute.snapshot.paramMap.get("departamentoId")))
 
-    this.getAll();
   }
 
   ngOnInit(): void {
+    this.getAll();
   }
 
   getAll() {
@@ -37,10 +37,13 @@ export class FuncionariosComponent implements OnInit {
 
   delete(id:number) {
     this.funcionarioService.deleteFuncionario(this.departamentoId,id).subscribe({
-      next: () => {console.log("Funcionário deletado com sucesso")
-        this.getAll();
+      next: () => {
+        console.log("Funcionário deletado com sucesso")
+        this.getAll()
       },
-      error: err => console.log(err)
+      error: err => {
+        console.log(err)
+      }
     })
   }
 

@@ -24,6 +24,10 @@
       maxlength="9"
     />
 
+    <div class="container" *ngIf="rgExists">
+      <span class="alert-danger p-1">{{ message }}</span>
+    </div>
+
     <button type="submit" (click)="validacao()" class="btn btn-primary mt-3">
       Enviar
     </button>

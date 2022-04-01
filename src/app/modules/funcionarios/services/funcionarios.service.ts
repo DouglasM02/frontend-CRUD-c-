@@ -8,25 +8,45 @@ import { Funcionarios } from '../model/funcionarios';
 })
 export class FuncionariosService {
 
+  header = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'Access-Control-Allow-Headers': 'Content-Type',
+}
+
   private readonly baseURL: string = "https://localhost:7194/v1/funcionarios"
 
   constructor(private httpClient: HttpClient) { }
 
   public getFuncionarios(departamentId: number): Observable<Funcionarios[]> {
-    return this.httpClient.get<Funcionarios[]>(`${this.baseURL}/${departamentId}`);
+    return this.httpClient.get<Funcionarios[]>(`${this.baseURL}/${departamentId}`, {
+      headers: this.header
+    });
   }
 
   public getFuncionarioById(departamentId: number, id: number):Observable<Funcionarios> {
-    return this.httpClient.get<Funcionarios>(`${this.baseURL}/${departamentId}/funcionario/${id}`)
+    return this.httpClient.get<Funcionarios>(`${this.baseURL}/${departamentId}/funcionario/${id}`, {
+      headers: this.header
+    })
+  }
+
+  public getFuncionarioByRg(rg:number): Observable<Funcionarios> {
+    return this.httpClient.get<Funcionarios>(`${this.baseURL}/rg/${rg}`, {
+      headers: this.header
+    })
   }
 
   public createFuncionario(departamentId: number, funcionario: Funcionarios): Observable<Funcionarios> {
-    return this.httpClient.post<Funcionarios>(`${this.baseURL}/${departamentId}`,funcionario)
+    return this.httpClient.post<Funcionarios>(`${this.baseURL}/${departamentId}`,funcionario, {
+      headers: this.header
+    })
   }
 
   public saveFuncionarioAtt(departamentId: number, funcionario: Funcionarios): Observable<Funcionarios> {
     if(funcionario.id) {
-      return this.httpClient.put<Funcionarios>(`${this.baseURL}/${departamentId}/funcionario/${funcionario.id}`, funcionario)
+      return this.httpClient.put<Funcionarios>(`${this.baseURL}/${departamentId}/funcionario/${funcionario.id}`, funcionario, {
+      headers: this.header
+    })
     }
     else {
       return of()
@@ -34,7 +54,9 @@ export class FuncionariosService {
   }
 
   public deleteFuncionario(departamentId: number, id:number): Observable<any> {
-    return this.httpClient.delete<any>(`${this.baseURL}/${departamentId}/funcionario/${id}`);
+    return this.httpClient.delete<any>(`${this.baseURL}/${departamentId}/funcionario/${id}`, {
+      headers: this.header
+    });
   }
 
   public uploadImage(imgUrl: FormData) {

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { catchError, Observable, of,map } from 'rxjs';
-import { DepartamentosService } from '../../services/departamentos.service';
 import { Departamentos } from '../../models/departamentos';
+import { DepartamentosService } from '../../services/departamentos.service';
 @Component({
   selector: 'app-departamentos',
   templateUrl: './departamentos.component.html',

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Departamentos } from 'src/app/modules/departamentos/models/departamentos';
-import { DepartamentosService } from 'src/app/modules/departamentos/services/departamentos.service';
 import { Funcionarios } from '../../model/funcionarios';
 import { FuncionariosService } from '../../services/funcionarios.service';
 
@@ -19,9 +18,12 @@ export class FormularioDeAtualizacaoDeFuncionarioComponent implements OnInit {
   departamentos: Departamentos[] = [];
   formAttFunc: FormGroup;
   imagemSelecionada: any = "";
-  //formGetDepartamentos: FormGroup;
+  statusNome: boolean = false;
+  statusRg: boolean = false;
+  rgExists: boolean = false;
+  message: string = "";
 
-  constructor(private activatedRoute: ActivatedRoute, private funcionarioService: FuncionariosService, private departamentServices: DepartamentosService, private formBuilder:FormBuilder) {
+  constructor(private activatedRoute: ActivatedRoute, private funcionarioService: FuncionariosService, private formBuilder:FormBuilder) {
     this.departamentoId = (Number(this.activatedRoute.snapshot.paramMap.get("departamentoId")))
     console.log(this.departamentoId)
 
@@ -36,14 +38,7 @@ export class FormularioDeAtualizacaoDeFuncionarioComponent implements OnInit {
       rg:['']
     })
 
-    // this.formGetDepartamentos = this.formBuilder.group({
-    //   getDepartamentos:[this.funcionarioId]
-    // })
-
     this.getById();
-
-    //this.getDepartaments()
-
 
    }
 
@@ -57,45 +52,50 @@ export class FormularioDeAtualizacaoDeFuncionarioComponent implements OnInit {
         this.funcionario = data
 
         this.formAttFunc.controls['nome'].setValue(this.funcionario.nome)
-        //this.formAttFunc.controls['foto'].setValue(this.funcionario.foto)
         this.formAttFunc.controls['rg'].setValue(this.funcionario.rg)
       },
       error: err => console.log(err)
     })
   }
 
-  // getDepartaments() {
-  //   this.departamentServices.getDepartaments().subscribe({
-  //     next: datas => this.departamentos = datas,
-  //     error: err => console.log(err)
-  //   })
-  // }
+  findByRg(rg:number) {
+    return this.funcionarioService.getFuncionarioByRg(rg).subscribe({
+      next: data => {
+         this.rgExists = true;
+         this.message = "Rg já existe";
+        console.log(data)
+
+      },
+      error: err => {
+        console.log(err)
+        this.rgExists = false;
+        this.funcionario.nome = this.formAttFunc.controls['nome'].value
+        this.funcionario.rg = this.formAttFunc.controls['rg'].value
+        const fd = new FormData()
+        fd.append("files", this.imagemSelecionada, this.imagemSelecionada.name)
+        this.imageInsert(fd);
+      }
+    });
+  }
 
   validacao() {
-    let statusNome = false;
-    let statusRg = false;
-
-    //console.log(this.formAttFunc.value)
 
     if(this.formAttFunc.controls['nome'].value.match("[a-zA-Z]+")) {
       console.log("Nome ok");
-      statusNome = true;
-      //console.log(this.formGetDepartamentos.controls['getDepartamentos'].value)
+      this.statusNome = true;
     }
 
-    if(this.formAttFunc.controls['rg'].value.length == 9 && this.formAttFunc.controls['rg'].value.match("[0-9]+")){
+    if(this.formAttFunc.controls['rg'].value.toString().length == 9 && this.formAttFunc.controls['rg'].value.toString().match("[0-9]+")){
       console.log("Rg ok")
-      statusRg = true;
+      this.statusRg = true;
     }
 
-    if(statusNome && statusRg) {
+    if(this.statusNome && this.statusRg) {
+      console.log("ok")
       this.funcionario.nome = this.formAttFunc.controls['nome'].value
       this.funcionario.rg = this.formAttFunc.controls['rg'].value
-      const fd = new FormData()
-      fd.append("files", this.imagemSelecionada, this.imagemSelecionada.name)
-      this.imageInsert(fd);
-      //console.log("tudo Ok")
-      //this.save()
+      this.findByRg(this.funcionario.rg)
+
     }
 
 
@@ -108,7 +108,9 @@ export class FormularioDeAtualizacaoDeFuncionarioComponent implements OnInit {
 
   imageInsert(file: FormData) {
     this.funcionarioService.uploadImage(file).subscribe({
-      next: data => console.log(data),
+      next: data => {
+        console.log(data)
+      },
       error: err =>  {
         this.funcionario.foto = err.error.text
         this.save()
@@ -123,7 +125,5 @@ export class FormularioDeAtualizacaoDeFuncionarioComponent implements OnInit {
     })
 
   }
-
-
 
 }
